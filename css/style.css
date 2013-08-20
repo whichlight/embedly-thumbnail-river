@@ -1,0 +1,33 @@
+.pic{
+  position:absolute;
+  opacity: 0.0;
+}
+
+#content{
+  overflow:hidden;
+}
+
+body{
+  background-color:black;
+  overflow: hidden;
+}
+
+h1{
+  z-index:10;
+  color: white;
+  width:1000px;
+  font-size: 30px;
+}
+
+.sign{
+  position:absolute;
+  z-index:10;
+  color: white;
+  width:1000px;
+  font-size: 30px;
+}
+
+.rank{
+  color: yellow;
+  font-size: 20px;
+}
