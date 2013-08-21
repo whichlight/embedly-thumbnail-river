@@ -16,6 +16,7 @@ function processEmbed(data){
 
   var w = Math.random()*$(window).width()-400;
   $div.css({top: image_height+"px", left: w});
+  $("#info").css({top: $(window).height() -100 + "px"});
 
   if(!duplicateURL(embed['thumbnail_url'])){
     $("#content").append($div);
@@ -132,7 +133,7 @@ function topTitles(modeMap){
 $(document).ready(function(){
   var socket = io.connect('http://'+window.location.hostname);
   socket.on('stream', function (data) {
-    if(data['data']['embed']["thumbnail_url"]!=""
+    if(data['data']['embed'] && data['data']['embed']["thumbnail_url"]!=""
       && $("#content div").length <MAX_IMAGES
       ){
       processEmbed(data['data']);

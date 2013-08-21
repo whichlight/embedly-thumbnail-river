@@ -26,7 +26,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 function handler (req, res) {
-  if(req.url === "/"){
+  if(req.url === "/thumbnail-river"){
     fs.readFile(__dirname + '/index.html',
         function (err, data) {
           if (err) {
