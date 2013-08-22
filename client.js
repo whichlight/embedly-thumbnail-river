@@ -13,14 +13,15 @@ function processEmbed(data){
   $div.data("url", url);
   $div.data("thumbnail_url", embed['thumbnail_url']);
   $div.data("description", embed['description']);
+  $div.click(function(){
+    console.log(data);
+  });
 
   var w = Math.random()*$(window).width()-400;
   $div.css({top: image_height+"px", left: w});
   $("#info").css({top: $(window).height() -100 + "px"});
 
-  if(!duplicateURL(embed['thumbnail_url'])){
     $("#content").append($div);
-  }
   $div.animate({left: "+=" +100, opacity: 1}, 1500, "linear", function(){
     $(this).animate({left : "+=" + 200, opacity: 0.0}, 3000, "linear", function(){
       $(this).remove();
@@ -30,16 +31,6 @@ function processEmbed(data){
   image_height+=100;
   if(image_height> $(window).height()){image_height=0;}
 }
-
-function duplicateURL(url){
-  $(".pic").each(function(i,v){
-    if ($(v).data("thumbnail_url")===url){
-      return true;
-    }
-  })
-  return false;
-}
-
 
 function crop(src){
   var call = "http://i.embed.ly/1/display/crop?url=";
@@ -54,7 +45,6 @@ function getPopular(){
   title_freqs = (mode(titles));
   displayTitles(topTitles(title_freqs));
 }
-
 
 function displayTitles(titles){
   var index = 0;
@@ -81,6 +71,7 @@ function displayTitle(title, index, url){
   div.innerHTML = "<h1><span class='rank'>Trending #"+index+"</span></h1>"+ " <h1>" +title+"</h1>";
   div.href = url;
   $div = $(div);
+
   $("#content").append($div);
   var htext = Math.floor(Math.random() * ($(window).height()-500)/100)*100+200;
   var w = $(window).width()/2 - 400;
