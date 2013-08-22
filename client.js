@@ -18,23 +18,15 @@ function processEmbed(data){
     console.log(data);
   });
 
-  var w = Math.random()*($(window).width()-400)-200;
+  var w = Math.random()*($(window).width()-200)-200;
   $div.css({top: image_height+"px", left: w});
   $("#info").css({top: $(window).height() -100 + "px"});
 
   $("#content").append($div);
 
-  /*
-  $div.animate({left: "+=" +100, opacity: 1}, 2000, "linear", function(){
-    $(this).animate({left : "+=" + 200, opacity: 0.0}, 3500, "linear", function(){
-      $(this).remove();
-    });
-  });
-  */
-
-  $div.animate({left: "+="+ 160, opacity: 1}, 2000, "linear", function(){
-    $(this).animate({left: "+="+ 160, opacity: 1}, 2000, "linear", function(){
-      $(this).animate({left: "+="+ 160, opacity: 0.0}, 2000, "linear", function(){
+  $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
+    $(this).animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
+      $(this).animate({left: "+="+ 100, opacity: 0.0}, 2000, "linear", function(){
         $(this).remove();
       });
     });
