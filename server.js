@@ -9,6 +9,8 @@ var request = require('request'),
 stream_key = key.key.stream;
 var apikey = qs.stringify({key : stream_key});
 var url = "http://stream.embed.ly?" + apikey;
+var uniques = [];
+var UNIQUES_SIZE = 50;
 
 var bs = new BufferStream({size:'flexible'});
 bs.enable();
@@ -16,14 +18,39 @@ bs.enable();
 request.get(url).pipe(bs);
 
 bs.split("\n", function(line){
-  bs.emit('data',line);
+  if(isUniqueThumb(line)){
+   bs.emit('data',line);
+  }
 });
 
 io.sockets.on('connection', function (socket) {
+  console.log("socket connected");
   bs.on('data', function(chunk){
-    socket.emit('stream', { data: JSON.parse(chunk.toString()) });
+      socket.emit('stream', { data: JSON.parse(chunk.toString()) });
+  });
+  socket.on('disconnect', function (socket) {
+    console.log('socket closed');
   });
 });
+
+function isUniqueThumb(chunk){
+  var data = JSON.parse(chunk);
+  if(data['embed']){
+    var thumb = data['embed']['thumbnail_url'];
+
+    while (uniques.length >= UNIQUES_SIZE){
+        uniques.shift();
+    }
+
+    if (uniques.indexOf(thumb) === -1){
+        uniques.push(thumb);
+        return true;
+    }
+    else{
+        return false;
+    }
+  }
+}
 
 function handler (req, res) {
   if(req.url === "/thumbnail-river"){

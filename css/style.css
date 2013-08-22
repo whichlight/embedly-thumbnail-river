@@ -23,13 +23,16 @@ h1{
   position:absolute;
   z-index:10;
   color: white;
-  width:1000px;
-  font-size: 30px;
+  width:400px;
+  font-size: 20px;
+  font-weight: 900;
 }
+
 
 .rank{
   color: yellow;
   font-size: 20px;
+  font-weight: 900;
 }
 
 #info{

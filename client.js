@@ -1,4 +1,5 @@
 var image_height=0;
+var image_width = 0;
 var MAX_IMAGES = 150;
 
 function processEmbed(data){
@@ -17,14 +18,25 @@ function processEmbed(data){
     console.log(data);
   });
 
-  var w = Math.random()*$(window).width()-400;
+  var w = Math.random()*($(window).width()-400)-200;
   $div.css({top: image_height+"px", left: w});
   $("#info").css({top: $(window).height() -100 + "px"});
 
-    $("#content").append($div);
-  $div.animate({left: "+=" +100, opacity: 1}, 1500, "linear", function(){
-    $(this).animate({left : "+=" + 200, opacity: 0.0}, 3000, "linear", function(){
+  $("#content").append($div);
+
+  /*
+  $div.animate({left: "+=" +100, opacity: 1}, 2000, "linear", function(){
+    $(this).animate({left : "+=" + 200, opacity: 0.0}, 3500, "linear", function(){
       $(this).remove();
+    });
+  });
+  */
+
+  $div.animate({left: "+="+ 160, opacity: 1}, 2000, "linear", function(){
+    $(this).animate({left: "+="+ 160, opacity: 1}, 2000, "linear", function(){
+      $(this).animate({left: "+="+ 160, opacity: 0.0}, 2000, "linear", function(){
+        $(this).remove();
+      });
     });
   });
 
@@ -68,14 +80,14 @@ function displayTitle(title, index, url){
   var div = document.createElement("a");
   div.className = 'sign';
   div.setAttribute("target", "_blank");
-  div.innerHTML = "<h1><span class='rank'>Trending #"+index+"</span></h1>"+ " <h1>" +title+"</h1>";
+  div.innerHTML = "<span class='rank'>Trending </span>"+title;
   div.href = url;
   $div = $(div);
 
   $("#content").append($div);
   var htext = Math.floor(Math.random() * ($(window).height()-500)/100)*100+200;
-  var w = $(window).width()/2 - 400;
-  $div.css({top: htext+"px", opacity: 0.0, left: w + "px"});
+  var w = $(window).width() - 400;
+  $div.css({top: 10+"px", opacity: 0.0, left: w + "px"});
 
   $div.animate({opacity: 1}, 1500, function(){
     $(this).animate({opacity: 1}, 1000, function(){
