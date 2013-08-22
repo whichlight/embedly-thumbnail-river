@@ -135,4 +135,7 @@ $(document).ready(function(){
     }
   });
   setTimeout(function(){getPopular()}, 10000);
+  $('img').error(function() {
+    $(this).remove();
+  });
 });
