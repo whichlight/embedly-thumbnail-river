@@ -1,7 +1,7 @@
 var image_height=0;
 var image_width = 0;
 var MAX_IMAGES = 150;
-
+$.embedly.defaults.key = api_key;
 function processEmbed(data){
   var embed = data['embed'];
   var url = data['url'];
@@ -14,9 +14,24 @@ function processEmbed(data){
   $div.data("url", url);
   $div.data("thumbnail_url", embed['thumbnail_url']);
   $div.data("description", embed['description']);
-  $div.click(function(){
-    console.log(data);
+
+
+  /* Include a tooltip on hover
+  $tooltip = $("#tooltip");
+  $div.mouseover(function(e){
+    $tooltip.html("<a href="+url+"></a>")
+    .css("top", ($(window).height()/3)+"px")
+    .css("left",($(window).width()/3)+"px")
+    .css("opacity", 0.9);
+    $("#tooltip a").embedly({
+      query: {maxheight: 400}
+    });
   });
+
+  $div.mouseout(function(e){
+    $tooltip.css("opacity", 0);
+  });
+  */
 
   var w = Math.random()*($(window).width()-200)-200;
   $div.css({top: image_height+"px", left: w});

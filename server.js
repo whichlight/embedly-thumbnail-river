@@ -1,10 +1,12 @@
-var request = require('request'),
-    fs = require('fs'),
+var fs = require('fs'),
     qs = require('qs'),
     BufferStream = require('bufferstream'),
-    app = require('http').createServer(handler).listen(3000),
+    http = require('http'),
+    app = http.createServer(handler).listen(3000),
     io = require('socket.io').listen(app),
-    key = require('./config.js');
+    key = require('./config.js'),
+    hyperquest = require('hyperquest');
+
 
 stream_key = key.key.stream;
 var apikey = qs.stringify({key : stream_key});
@@ -15,23 +17,17 @@ var UNIQUES_SIZE = 50;
 var bs = new BufferStream({size:'flexible'});
 bs.enable();
 
-request.get(url).pipe(bs);
-
-bs.split("\n", function(line){
-  if(isUniqueThumb(line)){
-   bs.emit('data',line);
-  }
-});
-
-io.sockets.on('connection', function (socket) {
-  console.log("socket connected");
-  bs.on('data', function(chunk){
-      socket.emit('stream', { data: JSON.parse(chunk.toString()) });
+function startStream(){
+  console.log('start stream');
+  var r = hyperquest(url);
+  r.pipe(bs);
+  r.on('close', function(){
+    console.log('stream closed');
   });
-  socket.on('disconnect', function (socket) {
-    console.log('socket closed');
+  r.on('error', function(err){
+    console.log(err.message);
   });
-});
+}
 
 function isUniqueThumb(chunk){
   var data = JSON.parse(chunk);
@@ -75,3 +71,23 @@ function handler (req, res) {
     });
   }
 }
+
+startStream();
+
+bs.split("\n", function(line){
+  if(isUniqueThumb(line)){
+   bs.emit('data',line);
+  }
+});
+
+io.sockets.on('connection', function (socket) {
+  console.log("socket connected");
+  bs.on('data', function(chunk){
+      socket.emit('stream', { data: JSON.parse(chunk.toString()) });
+  });
+  socket.on('disconnect', function (socket) {
+    console.log('socket closed');
+  });
+});
+
+
