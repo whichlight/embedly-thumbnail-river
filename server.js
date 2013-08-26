@@ -23,27 +23,24 @@ function startStream(){
   r.pipe(bs);
   r.on('close', function(){
     console.log('stream closed');
+    startStream();
   });
   r.on('error', function(err){
     console.log(err.message);
   });
 }
 
-function isUniqueThumb(chunk){
+function emitUniqueThumb(chunk){
   var data = JSON.parse(chunk);
   if(data['embed']){
     var thumb = data['embed']['thumbnail_url'];
 
-    while (uniques.length >= UNIQUES_SIZE){
-        uniques.shift();
-    }
-
     if (uniques.indexOf(thumb) === -1){
         uniques.push(thumb);
-        return true;
-    }
-    else{
-        return false;
+        if(uniques.length > UNIQUES_SIZE){
+            uniques.shift();
+        }
+        bs.emit('data',chunk);
     }
   }
 }
@@ -75,9 +72,7 @@ function handler (req, res) {
 startStream();
 
 bs.split("\n", function(line){
-  if(isUniqueThumb(line)){
-   bs.emit('data',line);
-  }
+  emitUniqueThumb(line);
 });
 
 io.sockets.on('connection', function (socket) {
