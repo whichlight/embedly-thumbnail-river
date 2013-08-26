@@ -15,7 +15,6 @@ function processEmbed(data){
   $div.data("thumbnail_url", embed['thumbnail_url']);
   $div.data("description", embed['description']);
 
-
   /* Include a tooltip on hover
   $tooltip = $("#tooltip");
   $div.mouseover(function(e){
