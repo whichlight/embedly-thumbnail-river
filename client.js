@@ -8,8 +8,7 @@ function processEmbed(data){
   var div = document.createElement("div");
   div.className = 'pic';
   div.innerHTML = '<a target="_blank" href="'+url+'" ><img width="100px" src="'+crop(embed['thumbnail_url'])+'"></a>';
-  $div = $(div);
-
+  var $div = $(div);
   $div.data("title", embed['title']);
   $div.data("url", url);
   $div.data("thumbnail_url", embed['thumbnail_url']);
@@ -36,12 +35,13 @@ function processEmbed(data){
   $div.css({top: image_height+"px", left: w});
   $("#info").css({top: $(window).height() -100 + "px"});
 
-  $("#content").append($div);
-
-  $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
-    $(this).animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
-      $(this).animate({left: "+="+ 100, opacity: 0.0}, 2000, "linear", function(){
-        $(this).remove();
+  $("img", $div).load(function(){
+   $("#content").append($div);
+    $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
+      $(this).animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
+        $(this).animate({left: "+="+ 100, opacity: 0.0}, 2000, "linear", function(){
+          $(this).remove();
+        });
       });
     });
   });
@@ -88,7 +88,7 @@ function displayTitle(title, index, url){
   div.setAttribute("target", "_blank");
   div.innerHTML = "<span class='rank'>Trending </span>"+title;
   div.href = url;
-  $div = $(div);
+  var $div = $(div);
 
   $("#content").append($div);
   var htext = Math.floor(Math.random() * ($(window).height()-500)/100)*100+200;
