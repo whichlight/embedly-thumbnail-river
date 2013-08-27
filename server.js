@@ -82,7 +82,14 @@ bs.split("\n", function(line){
 io.sockets.on('connection', function (socket) {
   console.log("socket connected");
   bs.on('data', function(chunk){
-      socket.emit('stream', { data: JSON.parse(chunk.toString()) });
+    try{
+      var data =  JSON.parse(chunk.toString());
+      socket.emit('stream', { data: data });
+    }
+    catch(e){
+      console.error(e.stack);
+      console.log(chunk);
+    }
   });
   socket.on('disconnect', function (socket) {
     console.log('socket closed');
