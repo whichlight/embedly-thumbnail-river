@@ -12,7 +12,9 @@ stream_key = key.key.stream;
 var apikey = qs.stringify({key : stream_key});
 var url = "http://stream.embed.ly?" + apikey;
 var uniques = [];
-var UNIQUES_SIZE = 50;
+var UNIQUES_SIZE = 300;
+
+io.set('log level', 1);
 
 var bs = new BufferStream({size:'flexible'});
 bs.enable();

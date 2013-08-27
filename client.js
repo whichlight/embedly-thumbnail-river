@@ -31,12 +31,23 @@ function processEmbed(data){
   });
   */
 
+  //reduce spikes
+  var len = $(".pic").length;
+  var last_urls = []
+  $(".pic").slice(len-20,len).each(function(i,v){
+   last_urls.push($(v).data('thumbnail_url'));
+  });
+
+  if (last_urls.indexOf(embed['thumbnail_url']) === -1){
+    $("#content").append($div);
+  }
+
+
   var w = Math.random()*($(window).width()-200)-200;
   $div.css({top: image_height+"px", left: w});
   $("#info").css({top: $(window).height() -100 + "px"});
 
   $("img", $div).load(function(){
-   $("#content").append($div);
     $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
       $(this).animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
         $(this).animate({left: "+="+ 100, opacity: 0.0}, 2000, "linear", function(){
