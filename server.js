@@ -34,17 +34,16 @@ function startStream(){
   });
 }
 
-function emitUniqueThumb(chunk){
-  var data = JSON.parse(chunk);
+function emitUniqueThumb(line){
+  var data = JSON.parse(line);
   if(data['embed']){
     var thumb = data['embed']['thumbnail_url'];
-
     if (uniques.indexOf(thumb) === -1){
-        uniques.push(thumb);
-        if(uniques.length > UNIQUES_SIZE){
-            uniques.shift();
-        }
-        bs.emit('data',chunk);
+      uniques.push(thumb);
+      if(uniques.length > UNIQUES_SIZE){
+        uniques.shift();
+      }
+      bs.emit('data',data);
     }
   }
 }
@@ -76,20 +75,19 @@ function handler (req, res) {
 startStream();
 
 bs.split("\n", function(line){
-  emitUniqueThumb(line);
+  try{
+    emitUniqueThumb(line);
+  }
+  catch(e){
+    console.error(e.stack);
+    console.log(line.toString());
+  }
 });
 
 io.sockets.on('connection', function (socket) {
   console.log("socket connected");
-  bs.on('data', function(chunk){
-    try{
-      var data =  JSON.parse(chunk.toString());
-      socket.emit('stream', { data: data });
-    }
-    catch(e){
-      console.error(e.stack);
-      console.log(chunk);
-    }
+  bs.on('data', function(data){
+    socket.emit('stream', { data: data });
   });
   socket.on('disconnect', function (socket) {
     console.log('socket closed');
