@@ -58,7 +58,7 @@ function processEmbed(data){
   });
 
   image_height+=100;
-  if(image_height> $(window).height()){image_height=0;}
+  if(image_height> $(window).height()-100){image_height=0;}
 }
 
 function crop(src){

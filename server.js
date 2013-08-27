@@ -20,6 +20,8 @@ var bs = new BufferStream({size:'flexible'});
 bs.enable();
 
 function startStream(){
+  bs.disable();
+  bs.enable();
   console.log('start stream');
   var r = hyperquest(url);
   r.pipe(bs);
