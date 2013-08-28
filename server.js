@@ -13,21 +13,26 @@ var apikey = qs.stringify({key : stream_key});
 var url = "http://stream.embed.ly?" + apikey;
 var uniques = [];
 var UNIQUES_SIZE = 300;
+var timeout;
 
 io.set('log level', 1);
 
 var bs = new BufferStream({size:'flexible'});
 bs.enable();
 
+bs.on("error", function(e){
+  console.log(e);
+});
+
 function startStream(){
-  bs.disable();
-  bs.enable();
+  bs.reset();
   console.log('start stream');
   var r = hyperquest(url);
   r.pipe(bs);
   r.on('close', function(){
     console.log('stream closed');
-    startStream();
+    process.exit();
+
   });
   r.on('error', function(err){
     console.log(err.message);
@@ -75,6 +80,15 @@ function handler (req, res) {
 startStream();
 
 bs.split("\n", function(line){
+
+  if(timeout){
+    clearTimeout(timeout)
+  }
+  timeout = setTimeout(function(){
+    console.error('stream timeout occurred');
+    process.exit();
+  },20000);
+
   try{
     emitUniqueThumb(line);
   }
