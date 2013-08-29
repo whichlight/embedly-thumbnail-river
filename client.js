@@ -2,6 +2,7 @@ var image_height=0;
 var image_width = 0;
 var MAX_IMAGES = 150;
 $.embedly.defaults.key = api_key;
+
 function processEmbed(data){
   var embed = data['embed'];
   var url = data['url'];
@@ -15,50 +16,53 @@ function processEmbed(data){
   $div.data("description", embed['description']);
 
   /* Include a tooltip on hover
-  $tooltip = $("#tooltip");
-  $div.mouseover(function(e){
-    $tooltip.html("<a href="+url+"></a>")
-    .css("top", ($(window).height()/3)+"px")
-    .css("left",($(window).width()/3)+"px")
-    .css("opacity", 0.9);
-    $("#tooltip a").embedly({
-      query: {maxheight: 400}
-    });
-  });
+     $tooltip = $("#tooltip");
+     $div.mouseover(function(e){
+     $tooltip.html("<a href="+url+"></a>")
+     .css("top", ($(window).height()/3)+"px")
+     .css("left",($(window).width()/3)+"px")
+     .css("opacity", 0.9);
+     $("#tooltip a").embedly({
+     query: {maxheight: 400}
+     });
+     });
 
-  $div.mouseout(function(e){
-    $tooltip.css("opacity", 0);
-  });
-  */
+     $div.mouseout(function(e){
+     $tooltip.css("opacity", 0);
+     });
+     */
 
   //reduce spikes
   var len = $(".pic").length;
   var last_urls = []
-  $(".pic").slice(len-20,len).each(function(i,v){
-   last_urls.push($(v).data('thumbnail_url'));
-  });
+    $(".pic").slice(len-20,len).each(function(i,v){
+      last_urls.push($(v).data('thumbnail_url'));
+    });
 
   if (last_urls.indexOf(embed['thumbnail_url']) === -1){
     $("#content").append($div);
-  }
 
+    var w = Math.random()*($(window).width()-200)-200;
+    $div.css({top: image_height+"px", left: w});
+    $("#info").css({top: $(window).height() -100 + "px"});
 
-  var w = Math.random()*($(window).width()-200)-200;
-  $div.css({top: image_height+"px", left: w});
-  $("#info").css({top: $(window).height() -100 + "px"});
-
-  $("img", $div).load(function(){
-    $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
-      $(this).animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
-        $(this).animate({left: "+="+ 100, opacity: 0.0}, 2000, "linear", function(){
-          $(this).remove();
+    $("img", $div).load(function(){
+      $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
+        $div.animate({left: "+="+ 100, opacity: 1}, 2000, "linear", function(){
+          $div.animate({left: "+="+ 100, opacity: 0.0}, 2000, "linear", function(){
+            $div.remove();
+          });
         });
       });
     });
-  });
 
-  image_height+=100;
-  if(image_height> $(window).height()-100){image_height=0;}
+    image_height+=100;
+    if(image_height> $(window).height()-100){image_height=0;}
+  }
+
+  $('img').error(function() {
+    $(this).remove();
+  });
 }
 
 function crop(src){
@@ -160,7 +164,4 @@ $(document).ready(function(){
     }
   });
   setTimeout(function(){getPopular()}, 10000);
-  $('img').error(function() {
-    $(this).remove();
-  });
 });

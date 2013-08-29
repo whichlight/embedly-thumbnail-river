@@ -80,7 +80,6 @@ function handler (req, res) {
 startStream();
 
 bs.split("\n", function(line){
-
   if(timeout){
     clearTimeout(timeout)
   }
